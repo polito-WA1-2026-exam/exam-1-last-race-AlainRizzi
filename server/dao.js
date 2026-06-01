@@ -87,7 +87,7 @@ const isAtLeast3Apart = (network, stationName1, stationName2) => {
             }
         }
     }
-    return false; // no path found â€” error case since the network should be fully connected, but we return false just in case
+    return false; // no path found, error case since the network should be fully connected, but we return false just in case
 };
 
 // This function is used to start a game and assign random start and destination stations that are at least 3 stations apart.
@@ -156,30 +156,25 @@ export const getSegments = () => {
 
 // Checks that: route has >3 segments, starts at startStation, ends at destinationStation,
 // and each consecutive segment shares an endpoint (chain is connected).
-const isRouteValid = (segments, route, startStation, destinationStation) => {
+const isRouteValid = (route, startStation, destinationStation) => {
     if (route.length < 3) return false;
-    if (route[0].from !== startStation) return false;
-    if (route[route.length - 1].to !== destinationStation) return false;
+    if (route[0].from !== startStation && route[0].to !== startStation) return false;
+    if (route[route.length - 1].to !== destinationStation && route[route.length - 1].from !== destinationStation) return false;
 
-    const segmentSet = new Set();
-    for (const { station1, station2 } of segments) {
-        segmentSet.add(`${station1}|${station2}`);
-        segmentSet.add(`${station2}|${station1}`);
-    }
-
-    for (let i = 0; i < route.length; i++) {
-        if (i < route.length - 1 && route[i].to !== route[i + 1].from) return false;
-        if (!segmentSet.has(`${route[i].from}|${route[i].to}`)) return false;
+    for (let i = 0; i < route.length - 1; i++) {
+        const exits = [route[i].from, route[i].to];
+        const enters = [route[i + 1].from, route[i + 1].to];
+        if (!exits.some(e => enters.includes(e))) return false;
     }
 
     return true;
 };
+
 // Validates and completes a game: applies weighted random events per segment, stores result.
 // Returns { valid, steps, finalScore }
 export const completeGame = async (gameId, userId, route) => {
     const game = await getGameById(gameId, userId);
-    const segments = await getSegments();
-    const valid = isRouteValid(segments, route, game.start_station_name, game.destination_station_name);
+    const valid = isRouteValid(route, game.start_station_name, game.destination_station_name);
 
     let finalScore = 0;
     const steps = [];

@@ -75,13 +75,13 @@ Content-Type: application/json
   "segments": [
     { "from": "Lotto", "to": "Pagano" },
     { "from": "Pagano", "to": "Cadorna FN" },
-    { "from": "Cadorna FN", "to": "Duomo" }
+    { "from": "Cordusio", "to": "Duomo" }
   ]
 }
 
 ###
 
-# Submit route false segments
+# Submit route bidirectional
 POST http://localhost:3001/api/games/3/route
 Content-Type: application/json
 
