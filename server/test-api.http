@@ -1,0 +1,66 @@
+# Login
+POST http://localhost:3001/api/sessions
+Content-Type: application/json
+
+{
+  "username": "AlainRizzi",
+  "password": "alain123"
+}
+
+###
+
+# Get current session
+GET http://localhost:3001/api/sessions/current
+
+###
+
+# Logout
+DELETE http://localhost:3001/api/sessions/current
+
+###
+
+# Get full network (Setup phase)
+GET http://localhost:3001/api/network
+
+###
+
+# Start a new game
+POST http://localhost:3001/api/games
+Content-Type: application/json
+
+{}
+
+###
+
+# Submit route
+POST http://localhost:3001/api/games/7/route
+Content-Type: application/json
+
+{
+  "segments": [
+    { "from": "Lotto", "to": "Pagano" },
+    { "from": "Pagano", "to": "Cadorna FN" },
+    { "from": "Cadorna FN", "to": "Cordusio" },
+    { "from": "Cordusio", "to": "Duomo" }
+  ]
+}
+
+###
+
+# Submit route
+POST http://localhost:3001/api/games/3/route
+Content-Type: application/json
+
+{
+  "segments": [
+    { "from": "Lotto", "to": "Pagano" },
+    { "from": "Pagano", "to": "Cadorna FN" },
+    { "from": "Cadorna FN", "to": "Cordusio" },
+    { "from": "Cordusio", "to": "Duomo" }
+  ]
+}
+
+###
+
+# Get ranking
+GET http://localhost:3001/api/ranking
