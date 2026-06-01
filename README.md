@@ -22,7 +22,7 @@
 
 ## Database Tables
 
-- Table `users` - id, email, name, salt, hash
+- Table `users` - id, username, name, salt, hash
 - Table `metro_lines` - code, name, color
 - Table `stations` - name, x, y
 - Table `line_stations` - line_code, station_name, position
@@ -43,11 +43,11 @@
 
 ## Users Credentials
 
-- alain.rizzi@lastrace.com, alain123
-- berta.tager@lastrace.com, berta123
-- matheus.cunha@lastrace.com, matheus123
-- alembert.rizzi@lastrace.com, alembert123
-- anabella.tager@lastrace.com, anabella123
+- AlainRizzi, alain123
+- BertaTager, berta123
+- Surfer, matheus123
+- Ace, alembert123
+- Giggles, anabella123
 
 ## Use of AI Tools
 Briefly describe whether you used any AI tools (e.g., ChatGPT, GitHub Copilot, Claude) while working on this project, for which purposes (e.g., clarifying concepts, debugging, generating code), and how you verified or adapted their output.
