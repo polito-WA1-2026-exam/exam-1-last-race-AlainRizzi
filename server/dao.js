@@ -28,7 +28,7 @@ export const getUserByCredentials = (username, password) => {
             else {
                 const user = new User(row.id, row.username, row.name);
 
-                crypto.scrypt(password, row.salt, 16, function(err, hashedPassword){
+                crypto.scrypt(password, row.salt, 32, function(err, hashedPassword){
                     if(err) reject(err);
                     if (!crypto.timingSafeEqual(Buffer.from(row.hash, 'hex'), hashedPassword)) {
                         resolve(false); // password does not match

@@ -111,7 +111,7 @@ app.get('/api/sessions/current', (req, res) => {
 
 // DELETE /api/session/current
 // For logout
-app.delete('/api/session/current', (req, res) => {
+app.delete('/api/sessions/current', (req, res) => {
     if(req.isAuthenticated()){
         req.logout(() => {
             res.status(204).end();
