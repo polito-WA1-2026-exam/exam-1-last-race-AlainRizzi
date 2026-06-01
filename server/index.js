@@ -67,6 +67,58 @@ const isLoggedIn = (req, res, next) => {
     return res.status(401).json({error: 'Not authorized'});
 }
 
+/*** Utility Functions ***/
+
+// This function is used to handle validation errors
+const onValidationErrors = (validationResult, res) => {
+    const errors = validationResult.formatWith(errorFormatter);
+    return res.status(422).json({validationErrors: errors.mapped()});
+};
+
+// Only keep the error message in the response
+const errorFormatter = ({msg}) => {
+    return msg;
+};
+
+/*** Users APIs ***/
+
+// POST /api/sessions
+// For login: expects {username, password} in the body, and returns {id, username, name} if successful
+app.post('/api/sessions', function(req, res, next){
+    passport.authenticate('local', (err, user, info) => {
+        if(err) return next(err);
+        if(!user){
+            //display wrong login message
+            return res.status(401).json({error: info});
+        }
+        // success, perform login
+        req.login(user, (err) => {
+            if(err) return next(err);
+            return res.json({id: user.id, username: user.username, name: user.name});
+        });
+    })(req, res, next);
+});
+
+// GET /api/sessions/current
+// For checking if the user is logged in or not
+app.get('/api/sessions/current', (req, res) => {
+    if(req.isAuthenticated()) {
+        res.status(200).json(req.user); // req.user is set by passport and contains id, username, name
+    } else {
+        res.status(401).json({error: 'Not authenticated'});
+    }
+});
+
+// DELETE /api/session/current
+// For logout
+app.delete('/api/session/current', (req, res) => {
+    req.logout(() => {
+        res.status(204).end();
+    });
+});
+
+
+
 // activate the server
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
