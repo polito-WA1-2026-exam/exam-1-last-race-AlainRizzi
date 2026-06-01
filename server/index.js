@@ -123,6 +123,7 @@ app.delete('/api/sessions/current', (req, res) => {
 });
 
 /*** Network APIs ***/
+
 // GET /api/network
 // Returns the metro network (lines and stations) to be stored in the server memory at startup and used for validating routes and calculating scores.
 app.get('/api/network', isLoggedIn, async (req, res) => {
@@ -138,6 +139,7 @@ app.get('/api/network', isLoggedIn, async (req, res) => {
 });
 
 /*** Game APIs ***/
+
 // POST /api/games
 // Starts a new game and assigns random start and destination stations.
 app.post('/api/games', isLoggedIn, async (req, res) => {
@@ -164,6 +166,8 @@ app.post('/api/games/:gameId/route', isLoggedIn, async (req, res) => {
         res.status(500).end();
     }
 });
+
+/*** Ranking APIs ***/
 
 // GET /api/ranking
 // Returns best score per user across all games, sorted descending
