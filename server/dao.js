@@ -69,3 +69,43 @@ export const getNetwork = () => {
         });
     });
 }
+
+const isAtLeast3Apart = (network, stationName1, stationName2) => {
+    const visited = new Set();
+    const queue = [{ name: stationName1, distance: 0 }];
+    while (queue.length > 0) {
+        const { name, distance } = queue.shift();
+        if (name === stationName2) return distance >= 3;
+        if (distance >= 3) return true; // target not found within 3 stops
+        if (visited.has(name)) continue;
+        visited.add(name);
+        for (const line of network) {
+            const index = line.Stations.findIndex(s => s.name === name);
+            if (index !== -1) {
+                if (index > 0) queue.push({ name: line.Stations[index - 1].name, distance: distance + 1 });
+                if (index < line.Stations.length - 1) queue.push({ name: line.Stations[index + 1].name, distance: distance + 1 });
+            }
+        }
+    }
+    return false; // no path found — error case since the network should be fully connected, but we return false just in case
+};
+
+// This function is used to start a game and assign random start and destination stations that are at least 3 stations apart.
+export const startGame = (userId, network) => {
+    return new Promise((resolve, reject) => {
+        const allStations = network.flatMap(line => line.Stations);
+        let startStation, destinationStation;
+        do {
+            startStation = allStations[Math.floor(Math.random() * allStations.length)];
+            destinationStation = allStations[Math.floor(Math.random() * allStations.length)];
+        } while (startStation.name === destinationStation.name || !isAtLeast3Apart(network, startStation.name, destinationStation.name));
+        const sql = 'INSERT INTO games (user_id, start_station_name, destination_station_name, final_score, route_valid, status) VALUES (?, ?, ?, ?, ?, ?)';
+        db.run(sql, [userId, startStation.name, destinationStation.name, 0, false, 'planning'], function(err) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve({ startStation, destinationStation });
+            }
+        });
+    });
+};

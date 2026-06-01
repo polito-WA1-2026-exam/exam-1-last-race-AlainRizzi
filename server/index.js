@@ -3,7 +3,7 @@ import express from "express";
 import morgan from 'morgan'; // logging middleware
 import cors from 'cors'; // CORS middleware
 import {check, validationResult} from 'express-validator'; // validation middleware
-import { getNetwork } from './dao.js';
+import { getNetwork, startGame } from './dao.js';
 
 // init express
 const app = new express();
@@ -133,6 +133,20 @@ app.get('/api/network', isLoggedIn, async (req, res) => {
         else
             res.json(network);
     } catch (err) {
+        res.status(500).end();
+    }
+});
+
+/*** Game APIs ***/
+// POST /api/games
+// Starts a new game and assigns random start and destination stations.
+app.post('/api/games', isLoggedIn, async (req, res) => {
+    try {
+        const network = await getNetwork();
+        const { startStation, destinationStation } = await startGame(req.user.id, network);
+        res.json({ startStation, destinationStation });
+    } catch (err) {
+        console.error(err);
         res.status(500).end();
     }
 });
