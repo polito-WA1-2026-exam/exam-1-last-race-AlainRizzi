@@ -22,9 +22,12 @@
 
 ## Database Tables
 
-- Table `users` - contains xx yy zz
-- Table `something` - contains ww qq ss
-- ...
+- Table `users` - stores users. It contains id, email, name, and hashed+salted credentials (salt, hash).
+- Table `metro_lines` - stores the metro lines of the network. It contains code (primary key), name, and display color.
+- Table `stations` - stores all stations in the network. It contains name (primary key) and x/y coordinates used to render the map.
+- Table `line_stations` - junction table connecting lines and stations. It contains line_code, station_name, and position (ordering of the station within that line), allowing reconstruction of all connections and segments.
+- Table `events` - stores the pool of random events that can occur during a journey segment. It contains title, description, effect (integer from -4 to +4), and probability_weight for weighted random selection.
+- Table `games` - stores each game played by a registered user. It contains user_id, start and destination station names, timestamps, final_score (≥ 0, null if not yet completed), route_valid (0/1), and status (planning or completed).
 
 ## Main React Components
 
