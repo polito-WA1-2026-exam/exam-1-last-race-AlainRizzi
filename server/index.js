@@ -112,9 +112,13 @@ app.get('/api/sessions/current', (req, res) => {
 // DELETE /api/session/current
 // For logout
 app.delete('/api/session/current', (req, res) => {
-    req.logout(() => {
-        res.status(204).end();
-    });
+    if(req.isAuthenticated()){
+        req.logout(() => {
+            res.status(204).end();
+      });
+    } else{
+        res.status(401).json({error: 'Not authenticated'});
+    }
 });
 
 
