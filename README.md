@@ -3,9 +3,11 @@
 
 ## React Client Application Routes
 
-- Route `/`: page content and purpose
-- Route `/something/:param`: page content and purpose, param specification
-- ...
+- Route `/`: home page with game instructions and login/play buttons
+- Route `/login`: login form
+- Route `/game`: full game session (setup, planning, execution, result phases)
+- Route `/ranking`: general leaderboard
+- Route `*`: page not found
 
 ## API Server
 
