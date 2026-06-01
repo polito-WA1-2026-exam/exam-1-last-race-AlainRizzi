@@ -11,16 +11,122 @@
 
 ## API Server
 
-- POST `/api/something`
-  - request parameters and request body content
-  - response body content
-- GET `/api/something`
-  - request parameters
-  - response body content
-- POST `/api/something`
-  - request parameters and request body content
-  - response body content
-- ...
+- `POST /api/sessions` — login
+  - Request body:
+    ```json
+    {
+        "username": "AlainRizzi",
+        "password": "alain123" 
+    }
+    ```
+  - Response body:
+    ```json
+    { 
+        "id": 1, 
+        "username": "AlainRizzi", 
+        "name": "Alain" 
+    }
+    ```
+
+- `DELETE /api/sessions/current` — logout [isAuthenticated]
+  - Request body: none
+  - Response body: none
+
+- `GET /api/sessions/current` — get current logged-in user [isAuthenticated]
+  - Request body: none
+  - Response body:
+    ```json
+    { 
+        "id": 1, 
+        "username": "AlainRizzi", 
+        "name": "Alain" 
+        }
+    ```
+
+- `GET /api/network` — get full network map with lines, stations and connections [isAuthenticated]
+  - Request body: none
+  - Response body:
+    ```json
+    [
+        { 
+            "code": "M1", 
+            "name": "Linea M1", 
+            "color": "#E42313",
+            "stations": 
+            [
+                { 
+                    "name": "Lotto", 
+                    "position": 1 
+                    }, ...
+            ] 
+        }
+    ]
+    ```
+
+- `GET /api/segments` — get all adjacent station pairs for the planning phase list [isAuthenticated]
+  - Request body: none
+  - Response body:
+    ```json
+    [
+        {
+            "from": "Lotto", 
+            "to": "Pagano" 
+        }, ...
+    ]
+    ```
+
+- `POST /api/games` — start a new game, server assigns start and destination stations [isAuthenticated]
+  - Request body: none
+  - Response body:
+    ```json
+    { 
+        "id": 3, 
+        "startStation": "Lotto", 
+        "destinationStation": "Duomo" 
+    }
+    ```
+
+- `POST /api/games/:id/route` — submit planned route; server validates, applies random events, stores result [isAuthenticated]
+  - Request body:
+    ```json
+    { 
+        "segments": 
+        [
+            { 
+                "from": "Lotto", 
+                "to": "Pagano" 
+            }, ...
+        ] 
+    }
+    ```
+  - Response body:
+    ```json
+    { 
+        "valid": true, 
+        "steps": 
+        [
+            { 
+                "from": "Lotto", 
+                "to": "Pagano", 
+                "event": "Crowded Train", 
+                "effect": -1, "coins": 19 
+                }, ...
+            ], 
+        "finalScore": 18 
+    }
+    ```
+
+- `GET /api/ranking` — get best score per registered user, sorted descending [isAuthenticated]
+  - Request body: none
+  - Response body:
+    ```json
+    [
+        { 
+            "name": "Alain", 
+            "score": 22 
+        }, ...
+    ]
+    ```
 
 ## Database Tables
 
