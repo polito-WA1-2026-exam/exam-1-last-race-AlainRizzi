@@ -27,7 +27,7 @@
 - Table `stations` - name, x, y
 - Table `line_stations` - line_code, station_name, position
 - Table `events` - id, title, description, effect, probability_weight
-- Table `games` - id, user_id, start_station_name, destination_station_name, started_at, completed_at, final_score, route_valid, and status
+- Table `games` - id, user_id, start_station_name, destination_station_name, final_score, route_valid, status
 
 ## Main React Components
 

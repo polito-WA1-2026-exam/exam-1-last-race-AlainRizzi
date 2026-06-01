@@ -1,6 +1,6 @@
-export function User(id, email, name){
+export function User(id, username, name){
     this.id = id;
-    this.email = email;
+    this.username = username;
     this.name = name;
 }
 
@@ -17,13 +17,11 @@ export function Line(code, name, color){
     this.Stations = [];
 }
 
-export function Game(id, userId, startStationName, destinationStationName, startedAt, completedAt, finalScore, routeValid, status) {
+export function Game(id, userId, startStationName, destinationStationName, finalScore, routeValid, status) {
     this.id = id;
     this.userId = userId;
     this.startStationName = startStationName;             // assigned starting station
     this.destinationStationName = destinationStationName; // assigned destination
-    this.startedAt = startedAt;                           // when POST /api/games created it
-    this.completedAt = completedAt;                       // when route was submitted (null if abandoned)
     this.finalScore = finalScore;                         // negatives stored/shown as 0
     this.routeValid = routeValid;                         // bool: was the submitted route valid
     this.status = status;                                 // e.g. 'planning' | 'completed'
