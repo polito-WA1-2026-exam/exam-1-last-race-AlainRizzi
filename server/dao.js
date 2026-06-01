@@ -2,7 +2,7 @@
 
 import dayjs from "dayjs";
 import db from "./db.js";
-import { User, Station, Line, Game, Step } from "./models.js";
+import { User, Station, Line, Step } from "./models.js";
 import crypto from "crypto";
 
 // This function is used to check if user is still in db by id
@@ -104,8 +104,80 @@ export const startGame = (userId, network) => {
             if (err) {
                 reject(err);
             } else {
-                resolve({ startStation, destinationStation });
+                resolve({ id: this.lastID, startStation, destinationStation });
             }
         });
     });
+};
+
+// Returns { start_station_name, destination_station_name } or rejects if not found
+const getGameById = (gameId, userId) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT start_station_name, destination_station_name FROM games WHERE id = ? AND user_id = ?';
+        db.get(sql, [gameId, userId], (err, row) => {
+            if (err) reject(err);
+            else if (row === undefined) reject(new Error('Game not found'));
+            else resolve(row);
+        });
+    });
+};
+
+// Returns weighted event pool as array of { title, description, effect }
+const getEvents = () => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT title, description, effect, probability_weight FROM events';
+        db.all(sql, [], (err, rows) => {
+            if (err) reject(err);
+            else {
+                const pool = [];
+                rows.forEach(row => {
+                    for (let i = 0; i < row.probability_weight; i++)
+                        pool.push({ title: row.title, description: row.description, effect: row.effect });
+                });
+                resolve(pool);
+            }
+        });
+    });
+};
+
+// Checks that: route has ≥3 segments, starts at startStation, ends at destinationStation,
+// and each consecutive segment shares an endpoint (chain is connected).
+const isRouteValid = (route, startStation, destinationStation) => {
+    if (route.length < 3) return false;
+    if (route[0].from !== startStation) return false;
+    if (route[route.length - 1].to !== destinationStation) return false;
+    for (let i = 0; i < route.length - 1; i++) {
+        if (route[i].to !== route[i + 1].from) return false;
+    }
+    return true;
+};
+
+// Validates and completes a game: applies weighted random events per segment, stores result.
+// Returns { valid, steps, finalScore }
+export const completeGame = async (gameId, userId, route) => {
+    const game = await getGameById(gameId, userId);
+    const valid = isRouteValid(route, game.start_station_name, game.destination_station_name);
+
+    let finalScore = 0;
+    const steps = [];
+
+    if (valid) {
+        const eventPool = await getEvents();
+        finalScore = 20;
+        for (const segment of route) {
+            const event = eventPool[Math.floor(Math.random() * eventPool.length)];
+            finalScore += event.effect;
+            steps.push(new Step(gameId, segment.from, segment.to, event, finalScore));
+        }
+    }
+
+    await new Promise((resolve, reject) => {
+        const sql = 'UPDATE games SET final_score = ?, route_valid = ?, status = ? WHERE id = ? AND user_id = ?';
+        db.run(sql, [finalScore, valid ? 1 : 0, 'completed', gameId, userId], err => {
+            if (err) reject(err);
+            else resolve();
+        });
+    });
+
+    return { valid, steps, finalScore };
 };

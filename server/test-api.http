@@ -33,6 +33,21 @@ Content-Type: application/json
 ###
 
 # Submit route
+POST http://localhost:3001/api/games/7/route
+Content-Type: application/json
+
+{
+  "segments": [
+    { "from": "Lotto", "to": "Pagano" },
+    { "from": "Pagano", "to": "Cadorna FN" },
+    { "from": "Cadorna FN", "to": "Cordusio" },
+    { "from": "Cordusio", "to": "Duomo" }
+  ]
+}
+
+###
+
+# Submit route
 POST http://localhost:3001/api/games/3/route
 Content-Type: application/json
 
@@ -40,7 +55,8 @@ Content-Type: application/json
   "segments": [
     { "from": "Lotto", "to": "Pagano" },
     { "from": "Pagano", "to": "Cadorna FN" },
-    { "from": "Cadorna FN", "to": "Duomo" }
+    { "from": "Cadorna FN", "to": "Cordusio" },
+    { "from": "Cordusio", "to": "Duomo" }
   ]
 }
 

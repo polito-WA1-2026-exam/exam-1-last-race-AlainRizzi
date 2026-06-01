@@ -3,7 +3,7 @@ import express from "express";
 import morgan from 'morgan'; // logging middleware
 import cors from 'cors'; // CORS middleware
 import {check, validationResult} from 'express-validator'; // validation middleware
-import { getNetwork, startGame } from './dao.js';
+import { getNetwork, startGame, completeGame } from './dao.js';
 
 // init express
 const app = new express();
@@ -143,8 +143,22 @@ app.get('/api/network', isLoggedIn, async (req, res) => {
 app.post('/api/games', isLoggedIn, async (req, res) => {
     try {
         const network = await getNetwork();
-        const { startStation, destinationStation } = await startGame(req.user.id, network);
-        res.json({ startStation, destinationStation });
+        const { id, startStation, destinationStation } = await startGame(req.user.id, network);
+        res.json({ id, startStation, destinationStation });
+    } catch (err) {
+        console.error(err);
+        res.status(500).end();
+    }
+});
+
+// POST /api/games/:gameId/route
+// Submits finished route for a game and calculates the score, returning the result of the game (final score, whether the route is valid or not).
+app.post('/api/games/:gameId/route', isLoggedIn, async (req, res) => {
+    try {
+        const { gameId } = req.params;
+        const { segments } = req.body; // route is an array of { from, to } objects representing the route segments
+        const { valid, steps: scoredSteps, finalScore } = await completeGame(gameId, req.user.id, segments);
+        res.json({ valid, steps: scoredSteps, finalScore });
     } catch (err) {
         console.error(err);
         res.status(500).end();
