@@ -3,7 +3,7 @@ import express from "express";
 import morgan from 'morgan'; // logging middleware
 import cors from 'cors'; // CORS middleware
 import {check, validationResult} from 'express-validator'; // validation middleware
-import { getNetwork, startGame, completeGame, getRanking } from './dao.js';
+import { getNetwork, getSegments, startGame, completeGame, getRanking } from './dao.js';
 
 // init express
 const app = new express();
@@ -81,6 +81,12 @@ const errorFormatter = ({msg}) => {
     return msg;
 };
 
+const handleValidationErrors = (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return onValidationErrors(errors, res);
+    next();
+};
+
 /*** Users APIs ***/
 
 // POST /api/sessions
@@ -138,6 +144,20 @@ app.get('/api/network', isLoggedIn, async (req, res) => {
     }
 });
 
+/*** Segments API ***/
+
+// GET /api/segments
+// Returns all adjacent station pairs (bidirectional connections) for the planning phase.
+app.get('/api/segments', isLoggedIn, async (req, res) => {
+    try {
+        const segments = await getSegments();
+        res.json(segments);
+    } catch (err) {
+        console.error(err);
+        res.status(500).end();
+    }
+});
+
 /*** Game APIs ***/
 
 // POST /api/games
@@ -155,9 +175,11 @@ app.post('/api/games', isLoggedIn, async (req, res) => {
 
 // POST /api/games/:gameId/route
 // Submits finished route for a game and calculates the score, returning the result of the game (final score, whether the route is valid or not).
-app.post('/api/games/:gameId/route', isLoggedIn, async (req, res) => {
+app.post('/api/games/:gameId/route', isLoggedIn, [
+    check('gameId').isInt({ min: 1 }).toInt()
+], handleValidationErrors, async (req, res) => {
     try {
-        const { gameId } = req.params;
+        const gameId = Number(req.params.gameId);
         const { segments } = req.body; // route is an array of { from, to } objects representing the route segments
         const { valid, steps: scoredSteps, finalScore } = await completeGame(gameId, req.user.id, segments);
         res.json({ valid, steps: scoredSteps, finalScore });

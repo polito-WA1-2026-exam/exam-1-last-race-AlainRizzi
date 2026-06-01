@@ -43,7 +43,7 @@
         }
     ```
 
-- `GET /api/network` — get full network map with lines, stations and connections [isAuthenticated]
+- `GET /api/network` — get full network map with lines and stations [isAuthenticated]
   - Request body: none
   - Response body:
     ```json
@@ -52,14 +52,27 @@
             "code": "M1", 
             "name": "Linea M1", 
             "color": "#E42313",
-            "stations": 
+            "Stations": 
             [
                 { 
                     "name": "Lotto", 
-                    "position": 1 
-                    }, ...
+                    "x": 10, 
+                    "y": 20 
+                }, ...
             ] 
-        }
+        }, ...
+    ]
+    ```
+
+- `GET /api/segments` — get all adjacent station pairs for the planning phase [isAuthenticated]
+  - Request body: none
+  - Response body:
+    ```json
+    [
+        { 
+            "station1": "Lotto", 
+            "station2": "Pagano" 
+        }, ...
     ]
     ```
 
@@ -69,8 +82,8 @@
     ```json
     { 
         "id": 3, 
-        "startStation": "Lotto", 
-        "destinationStation": "Duomo" 
+        "startStation": { "name": "Lotto", "x": 10, "y": 20 },
+        "destinationStation": { "name": "Duomo", "x": 50, "y": 60 }
     }
     ```
 
@@ -96,10 +109,10 @@
             { 
                 "from": "Lotto", 
                 "to": "Pagano", 
-                "event": "Crowded Train", 
-                "effect": -1, "coins": 19 
-                }, ...
-            ], 
+                "event": { "title": "Crowded Train", "description": "...", "effect": -1 },
+                "coinsAfter": 19
+            }, ...
+        ], 
         "finalScore": 18 
     }
     ```
@@ -110,8 +123,10 @@
     ```json
     [
         { 
-            "name": "Alain", 
-            "score": 22 
+            "username": "AlainRizzi", 
+            "score": 22,
+            "startStation": "Lotto",
+            "destinationStation": "Duomo"
         }, ...
     ]
     ```

@@ -1,8 +1,8 @@
-/* Data Access Object (DAO) module for accessing models data */
+﻿/* Data Access Object (DAO) module for accessing models data */
 
 import dayjs from "dayjs";
 import db from "./db.js";
-import { User, Station, Line, Step } from "./models.js";
+import { User, Station, Line } from "./models.js";
 import crypto from "crypto";
 
 // This function is used to check if user is still in db by id
@@ -87,7 +87,7 @@ const isAtLeast3Apart = (network, stationName1, stationName2) => {
             }
         }
     }
-    return false; // no path found — error case since the network should be fully connected, but we return false just in case
+    return false; // no path found â€” error case since the network should be fully connected, but we return false just in case
 };
 
 // This function is used to start a game and assign random start and destination stations that are at least 3 stations apart.
@@ -140,23 +140,46 @@ const getEvents = () => {
     });
 };
 
-// Checks that: route has ≥3 segments, starts at startStation, ends at destinationStation,
+// Returns all adjacent station pairs from the DB as { station1, station2 }, deduped (bidirectional connections stored once).
+export const getSegments = () => {
+    return new Promise((resolve, reject) => {
+        const sql = `SELECT ls1.station_name AS station1, ls2.station_name AS station2
+                     FROM line_stations ls1, line_stations ls2
+                     WHERE ls1.line_code = ls2.line_code
+                     AND ls2.position = ls1.position + 1`;
+        db.all(sql, [], (err, rows) => {
+            if (err) reject(err);
+            else resolve(rows.map(r => ({ station1: r.station1, station2: r.station2 })));
+        });
+    });
+};
+
+// Checks that: route has >3 segments, starts at startStation, ends at destinationStation,
 // and each consecutive segment shares an endpoint (chain is connected).
-const isRouteValid = (route, startStation, destinationStation) => {
+const isRouteValid = (segments, route, startStation, destinationStation) => {
     if (route.length < 3) return false;
     if (route[0].from !== startStation) return false;
     if (route[route.length - 1].to !== destinationStation) return false;
-    for (let i = 0; i < route.length - 1; i++) {
-        if (route[i].to !== route[i + 1].from) return false;
+
+    const segmentSet = new Set();
+    for (const { station1, station2 } of segments) {
+        segmentSet.add(`${station1}|${station2}`);
+        segmentSet.add(`${station2}|${station1}`);
     }
+
+    for (let i = 0; i < route.length; i++) {
+        if (i < route.length - 1 && route[i].to !== route[i + 1].from) return false;
+        if (!segmentSet.has(`${route[i].from}|${route[i].to}`)) return false;
+    }
+
     return true;
 };
-
 // Validates and completes a game: applies weighted random events per segment, stores result.
 // Returns { valid, steps, finalScore }
 export const completeGame = async (gameId, userId, route) => {
     const game = await getGameById(gameId, userId);
-    const valid = isRouteValid(route, game.start_station_name, game.destination_station_name);
+    const segments = await getSegments();
+    const valid = isRouteValid(segments, route, game.start_station_name, game.destination_station_name);
 
     let finalScore = 0;
     const steps = [];
@@ -167,7 +190,7 @@ export const completeGame = async (gameId, userId, route) => {
         for (const segment of route) {
             const event = eventPool[Math.floor(Math.random() * eventPool.length)];
             finalScore += event.effect;
-            steps.push(new Step(gameId, segment.from, segment.to, event, finalScore));
+            steps.push({ from: segment.from, to: segment.to, event, coinsAfter: finalScore });
         }
     }
 

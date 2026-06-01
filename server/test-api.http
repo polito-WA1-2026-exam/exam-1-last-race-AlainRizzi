@@ -24,6 +24,11 @@ GET http://localhost:3001/api/network
 
 ###
 
+# Get all segments (Planning phase)
+GET http://localhost:3001/api/segments
+
+###
+
 # Start a new game
 POST http://localhost:3001/api/games
 Content-Type: application/json
@@ -55,6 +60,35 @@ Content-Type: application/json
   "segments": [
     { "from": "Lotto", "to": "Pagano" },
     { "from": "Pagano", "to": "Cadorna FN" },
+    { "from": "Cadorna FN", "to": "Cordusio" },
+    { "from": "Cordusio", "to": "Duomo" }
+  ]
+}
+
+###
+
+# Submit route false (not connected)   
+POST http://localhost:3001/api/games/3/route
+Content-Type: application/json
+
+{
+  "segments": [
+    { "from": "Lotto", "to": "Pagano" },
+    { "from": "Pagano", "to": "Cadorna FN" },
+    { "from": "Cadorna FN", "to": "Duomo" }
+  ]
+}
+
+###
+
+# Submit route false segments
+POST http://localhost:3001/api/games/3/route
+Content-Type: application/json
+
+{
+  "segments": [
+    { "from": "Lotto", "to": "Pagano" },
+    { "from": "Cadorna FN", "to": "Pagano" },
     { "from": "Cadorna FN", "to": "Cordusio" },
     { "from": "Cordusio", "to": "Duomo" }
   ]
