@@ -3,6 +3,7 @@ import express from "express";
 import morgan from 'morgan'; // logging middleware
 import cors from 'cors'; // CORS middleware
 import {check, validationResult} from 'express-validator'; // validation middleware
+import { getNetwork } from './dao.js';
 
 // init express
 const app = new express();
@@ -121,7 +122,20 @@ app.delete('/api/sessions/current', (req, res) => {
     }
 });
 
-
+/*** Network APIs ***/
+// GET /api/network
+// Returns the metro network (lines and stations) to be stored in the server memory at startup and used for validating routes and calculating scores.
+app.get('/api/network', isLoggedIn, async (req, res) => {
+    try {
+        const network = await getNetwork();
+        if (network.length === 0)
+            res.status(404).json({error: 'Network not found'});
+        else
+            res.json(network);
+    } catch (err) {
+        res.status(500).end();
+    }
+});
 
 // activate the server
 app.listen(port, () => {

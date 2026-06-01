@@ -63,18 +63,6 @@
     ]
     ```
 
-- `GET /api/segments` — get all adjacent station pairs for the planning phase list [isAuthenticated]
-  - Request body: none
-  - Response body:
-    ```json
-    [
-        {
-            "from": "Lotto", 
-            "to": "Pagano" 
-        }, ...
-    ]
-    ```
-
 - `POST /api/games` — start a new game, server assigns start and destination stations [isAuthenticated]
   - Request body: none
   - Response body:
