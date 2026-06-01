@@ -181,3 +181,22 @@ export const completeGame = async (gameId, userId, route) => {
 
     return { valid, steps, finalScore };
 };
+
+// Returns best score per user, sorted descending
+export const getRanking = () => {
+    return new Promise((resolve, reject) => {
+        const sql = `SELECT u.username, g.final_score AS score, g.start_station_name, g.destination_station_name
+                     FROM users u, games g
+                     WHERE u.id = g.user_id AND g.route_valid = 1
+                     AND g.final_score = (
+                         SELECT MAX(g2.final_score) FROM games g2
+                         WHERE g2.user_id = u.id AND g2.route_valid = 1
+                     )
+                     GROUP BY u.id
+                     ORDER BY score DESC`;
+        db.all(sql, [], (err, rows) => {
+            if (err) reject(err);
+            else resolve(rows.map(r => ({ username: r.username, score: r.score, startStation: r.start_station_name, destinationStation: r.destination_station_name })));
+        });
+    });
+};

@@ -3,7 +3,7 @@ import express from "express";
 import morgan from 'morgan'; // logging middleware
 import cors from 'cors'; // CORS middleware
 import {check, validationResult} from 'express-validator'; // validation middleware
-import { getNetwork, startGame, completeGame } from './dao.js';
+import { getNetwork, startGame, completeGame, getRanking } from './dao.js';
 
 // init express
 const app = new express();
@@ -159,6 +159,18 @@ app.post('/api/games/:gameId/route', isLoggedIn, async (req, res) => {
         const { segments } = req.body; // route is an array of { from, to } objects representing the route segments
         const { valid, steps: scoredSteps, finalScore } = await completeGame(gameId, req.user.id, segments);
         res.json({ valid, steps: scoredSteps, finalScore });
+    } catch (err) {
+        console.error(err);
+        res.status(500).end();
+    }
+});
+
+// GET /api/ranking
+// Returns best score per user across all games, sorted descending
+app.get('/api/ranking', isLoggedIn, async (req, res) => {
+    try {
+        const ranking = await getRanking();
+        res.json(ranking);
     } catch (err) {
         console.error(err);
         res.status(500).end();
