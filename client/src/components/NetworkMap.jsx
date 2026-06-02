@@ -3,7 +3,12 @@ const PADDING = 40;
 function NetworkMap({ network, startStation = null, destinationStation = null, showLines = true }) {
     if (!network || network.length === 0) return null;
 
-    const allStations = network.flatMap(l => l.Stations);
+    const seen = new Set();
+    const allStations = network.flatMap(l => l.Stations).filter(s => {
+        if (seen.has(s.name)) return false;
+        seen.add(s.name);
+        return true;
+    });
     const xs = allStations.map(s => s.x);
     const ys = allStations.map(s => s.y);
     const minX = Math.min(...xs) - PADDING;
