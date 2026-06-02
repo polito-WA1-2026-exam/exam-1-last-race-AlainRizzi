@@ -9,6 +9,7 @@ import UserContext from './contexts/UserContext.jsx';
 import NavBarLayout from './components/NavBarLayout.jsx';
 import HomePage from './components/HomePage.jsx';
 import LoginPage from './components/LoginPage.jsx';
+import RankingPage from './components/RankingPage.jsx';
 import NotFoundPage from './components/NotFoundPage.jsx';
 
 function App() {
@@ -56,7 +57,7 @@ function App() {
                 <Route element={<NavBarLayout onLogout={handleLogout} />}>
                     <Route index element={<HomePage />} />
                     <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
-                    <Route path="/ranking" element={logged ? <div className="p-5">Ranking page (TODO)</div> : <Navigate to="/" />} />
+                    <Route path="/ranking" element={logged ? <RankingPage /> : <Navigate to="/" />} />
                     <Route path="*" element={<NotFoundPage />} />
                 </Route>
 
