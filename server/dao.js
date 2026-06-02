@@ -2,7 +2,7 @@
 
 import dayjs from "dayjs";
 import db from "./db.js";
-import { User, Station, Line } from "./models.js";
+import { Station, Line, Step } from "./models.js";
 import crypto from "crypto";
 
 // This function is used to check if user is still in db by id
@@ -28,14 +28,12 @@ export const getUserByCredentials = (username, password) => {
                 resolve(false); // no user with this username
             } 
             else {
-                const user = new User(row.id, row.username, row.name);
-
                 crypto.scrypt(password, row.salt, 32, function(err, hashedPassword){
                     if(err) reject(err);
                     if (!crypto.timingSafeEqual(Buffer.from(row.hash, 'hex'), hashedPassword)) {
                         resolve(false); // password does not match
                     } else {
-                        resolve(user); // success: username and password match
+                        resolve({ id: row.id, username: row.username, name: row.name });
                     }
                 });
             }
@@ -69,6 +67,20 @@ export const getNetwork = () => {
         });
     });
 }
+
+// Returns all adjacent station pairs from the DB as { station1, station2 }, deduped (bidirectional connections stored once).
+export const getSegments = () => {
+    return new Promise((resolve, reject) => {
+        const sql = `SELECT ls1.station_name AS station1, ls2.station_name AS station2
+                     FROM line_stations ls1, line_stations ls2
+                     WHERE ls1.line_code = ls2.line_code
+                     AND ls2.position = ls1.position + 1`;
+        db.all(sql, [], (err, rows) => {
+            if (err) reject(err);
+            else resolve(rows.map(r => ({ station1: r.station1, station2: r.station2 })));
+        });
+    });
+};
 
 const isAtLeast3Apart = (network, stationName1, stationName2) => {
     const visited = new Set();
@@ -140,19 +152,6 @@ const getEvents = () => {
     });
 };
 
-// Returns all adjacent station pairs from the DB as { station1, station2 }, deduped (bidirectional connections stored once).
-export const getSegments = () => {
-    return new Promise((resolve, reject) => {
-        const sql = `SELECT ls1.station_name AS station1, ls2.station_name AS station2
-                     FROM line_stations ls1, line_stations ls2
-                     WHERE ls1.line_code = ls2.line_code
-                     AND ls2.position = ls1.position + 1`;
-        db.all(sql, [], (err, rows) => {
-            if (err) reject(err);
-            else resolve(rows.map(r => ({ station1: r.station1, station2: r.station2 })));
-        });
-    });
-};
 
 // Checks that: route has >3 segments, starts at startStation, ends at destinationStation,
 // and each consecutive segment shares an endpoint (chain is connected).
@@ -185,7 +184,7 @@ export const completeGame = async (gameId, userId, route) => {
         for (const segment of route) {
             const event = eventPool[Math.floor(Math.random() * eventPool.length)];
             finalScore += event.effect;
-            steps.push({ station1: segment.station1, station2: segment.station2, event, coinsAfter: finalScore });
+            steps.push(new Step(segment.station1, segment.station2, event, finalScore));
         }
     }
 

@@ -1,9 +1,3 @@
-export function User(id, username, name){
-    this.id = id;
-    this.username = username;
-    this.name = name;
-}
-
 export function Station(name, x, y){
     this.name = name;
     this.x = x;
@@ -18,10 +12,9 @@ export function Line(code, name, color){
 }
 
 
-export function Step(gameId, from, to, event, coinsAfter) {
-    this.gameId = gameId;
-    this.from = from;             // station (name)
-    this.to = to;
-    this.event = event;           // { description, effect } applied to this segment
-    this.coinsAfter = coinsAfter; // running coin total after this step
-  }
+export function Step(station1, station2, event, coinsAfter) {
+    this.station1 = station1;
+    this.station2 = station2;
+    this.event = event;
+    this.coinsAfter = coinsAfter;
+}
