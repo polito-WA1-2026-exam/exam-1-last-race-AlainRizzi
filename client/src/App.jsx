@@ -10,6 +10,7 @@ import NavBarLayout from './components/NavBarLayout.jsx';
 import HomePage from './components/HomePage.jsx';
 import LoginPage from './components/LoginPage.jsx';
 import RankingPage from './components/RankingPage.jsx';
+import GamePage from './components/GamePage.jsx';
 import NotFoundPage from './components/NotFoundPage.jsx';
 
 function App() {
@@ -62,7 +63,7 @@ function App() {
                 </Route>
 
                 {/* Game route — no navbar */}
-                <Route path="/game" element={logged ? <div className="p-5">Game page (TODO)</div> : <Navigate to="/" />} />
+                <Route path="/game" element={logged ? <GamePage /> : <Navigate to="/" />} />
             </Routes>
         </UserContext.Provider>
     );
