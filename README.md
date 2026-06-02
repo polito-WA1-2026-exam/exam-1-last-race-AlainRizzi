@@ -40,7 +40,7 @@
         "id": 1, 
         "username": "AlainRizzi", 
         "name": "Alain" 
-        }
+    }
     ```
 
 - `GET /api/network` — get full network map with lines and stations [isAuthenticated]
@@ -82,8 +82,18 @@
     ```json
     { 
         "id": 3, 
-        "startStation": { "name": "Lotto", "x": 10, "y": 20 },
-        "destinationStation": { "name": "Duomo", "x": 50, "y": 60 }
+        "startStation": 
+        { 
+            "name": "Lotto", 
+            "x": 10, 
+            "y": 20 
+        },
+        "destinationStation": 
+        { 
+            "name": "Duomo", 
+            "x": 50, 
+            "y": 60 
+        }
     }
     ```
 
@@ -107,9 +117,14 @@
         "steps": 
         [
             { 
-                "from": "Lotto", 
-                "to": "Pagano", 
-                "event": { "title": "Crowded Train", "description": "...", "effect": -1 },
+                "station1": "Lotto", 
+                "station2": "Pagano", 
+                "event": 
+                { 
+                    "title": "Crowded Train", 
+                    "description": "...", 
+                    "effect": -1 
+                },
                 "coinsAfter": 19
             }, ...
         ], 
