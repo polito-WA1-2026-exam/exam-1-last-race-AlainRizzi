@@ -94,8 +94,8 @@
         "segments": 
         [
             { 
-                "from": "Lotto", 
-                "to": "Pagano" 
+                "station1": "Lotto", 
+                "station2": "Pagano" 
             }, ...
         ] 
     }

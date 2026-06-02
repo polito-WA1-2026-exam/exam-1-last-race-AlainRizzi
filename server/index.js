@@ -151,7 +151,10 @@ app.get('/api/network', isLoggedIn, async (req, res) => {
 app.get('/api/segments', isLoggedIn, async (req, res) => {
     try {
         const segments = await getSegments();
-        res.json(segments);
+        if (segments.length === 0)
+            res.status(404).json({error: 'Segments not found'});
+        else
+            res.json(segments);
     } catch (err) {
         console.error(err);
         res.status(500).end();
@@ -180,7 +183,7 @@ app.post('/api/games/:gameId/route', isLoggedIn, [
 ], handleValidationErrors, async (req, res) => {
     try {
         const gameId = Number(req.params.gameId);
-        const { segments } = req.body; // route is an array of { from, to } objects representing the route segments
+        const { segments } = req.body; // route is an array of { station1, station2 } objects representing the route segments
         const { valid, steps: scoredSteps, finalScore } = await completeGame(gameId, req.user.id, segments);
         res.json({ valid, steps: scoredSteps, finalScore });
     } catch (err) {

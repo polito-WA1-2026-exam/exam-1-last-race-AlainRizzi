@@ -158,12 +158,12 @@ export const getSegments = () => {
 // and each consecutive segment shares an endpoint (chain is connected).
 const isRouteValid = (route, startStation, destinationStation) => {
     if (route.length < 3) return false;
-    if (route[0].from !== startStation && route[0].to !== startStation) return false;
-    if (route[route.length - 1].to !== destinationStation && route[route.length - 1].from !== destinationStation) return false;
+    if (route[0].station1 !== startStation && route[0].station2 !== startStation) return false;
+    if (route[route.length - 1].station2 !== destinationStation && route[route.length - 1].station1 !== destinationStation) return false;
 
     for (let i = 0; i < route.length - 1; i++) {
-        const exits = [route[i].from, route[i].to];
-        const enters = [route[i + 1].from, route[i + 1].to];
+        const exits = [route[i].station1, route[i].station2];
+        const enters = [route[i + 1].station1, route[i + 1].station2];
         if (!exits.some(e => enters.includes(e))) return false;
     }
 
@@ -185,7 +185,7 @@ export const completeGame = async (gameId, userId, route) => {
         for (const segment of route) {
             const event = eventPool[Math.floor(Math.random() * eventPool.length)];
             finalScore += event.effect;
-            steps.push({ from: segment.from, to: segment.to, event, coinsAfter: finalScore });
+            steps.push({ station1: segment.station1, station2: segment.station2, event, coinsAfter: finalScore });
         }
     }
 

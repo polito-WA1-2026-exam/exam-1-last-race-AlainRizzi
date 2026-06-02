@@ -43,10 +43,10 @@ Content-Type: application/json
 
 {
   "segments": [
-    { "from": "Lotto", "to": "Pagano" },
-    { "from": "Pagano", "to": "Cadorna FN" },
-    { "from": "Cadorna FN", "to": "Cordusio" },
-    { "from": "Cordusio", "to": "Duomo" }
+    { "station1": "Lotto", "station2": "Pagano" },
+    { "station1": "Pagano", "station2": "Cadorna FN" },
+    { "station1": "Cadorna FN", "station2": "Cordusio" },
+    { "station1": "Cordusio", "station2": "Duomo" }
   ]
 }
 
@@ -58,10 +58,10 @@ Content-Type: application/json
 
 {
   "segments": [
-    { "from": "Lotto", "to": "Pagano" },
-    { "from": "Pagano", "to": "Cadorna FN" },
-    { "from": "Cadorna FN", "to": "Cordusio" },
-    { "from": "Cordusio", "to": "Duomo" }
+    { "station1": "Lotto", "station2": "Pagano" },
+    { "station1": "Pagano", "station2": "Cadorna FN" },
+    { "station1": "Cadorna FN", "station2": "Cordusio" },
+    { "station1": "Cordusio", "station2": "Duomo" }
   ]
 }
 
@@ -73,9 +73,9 @@ Content-Type: application/json
 
 {
   "segments": [
-    { "from": "Lotto", "to": "Pagano" },
-    { "from": "Pagano", "to": "Cadorna FN" },
-    { "from": "Cordusio", "to": "Duomo" }
+    { "station1": "Lotto", "station2": "Pagano" },
+    { "station1": "Pagano", "station2": "Cadorna FN" },
+    { "station1": "Cordusio", "station2": "Duomo" }
   ]
 }
 
@@ -87,10 +87,10 @@ Content-Type: application/json
 
 {
   "segments": [
-    { "from": "Lotto", "to": "Pagano" },
-    { "from": "Cadorna FN", "to": "Pagano" },
-    { "from": "Cadorna FN", "to": "Cordusio" },
-    { "from": "Cordusio", "to": "Duomo" }
+    { "station1": "Lotto", "station2": "Pagano" },
+    { "station1": "Cadorna FN", "station2": "Pagano" },
+    { "station1": "Cadorna FN", "station2": "Cordusio" },
+    { "station1": "Cordusio", "station2": "Duomo" }
   ]
 }
 
