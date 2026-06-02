@@ -11,7 +11,7 @@ function HomePage() {
             <h1 className="mb-2">Last Race <i className="bi bi-train-front-fill" /></h1>
             <p className="lead text-muted mb-5">Plan your underground route before time runs out and score as many coins as possible.</p>
 
-            <div className="text-start mx-auto mb-5" style={{ maxWidth: 680 }}>
+            <div className="text-start mx-auto mb-5">
                 <h4 className="mb-3">How to play</h4>
                 <ol className="ps-3">
                     <li className="mb-3">

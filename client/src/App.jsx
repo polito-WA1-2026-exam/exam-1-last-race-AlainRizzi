@@ -8,6 +8,7 @@ import { checkSession, doLogin, doLogout } from './api/auth.js';
 import UserContext from './contexts/UserContext.jsx';
 import NavBarLayout from './components/NavBarLayout.jsx';
 import HomePage from './components/HomePage.jsx';
+import LoginPage from './components/LoginPage.jsx';
 import NotFoundPage from './components/NotFoundPage.jsx';
 
 function App() {
@@ -54,7 +55,7 @@ function App() {
                 {/* Routes with navbar */}
                 <Route element={<NavBarLayout onLogout={handleLogout} />}>
                     <Route index element={<HomePage />} />
-                    <Route path="/login" element={<div className="p-5">Login page (TODO)</div>} />
+                    <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
                     <Route path="/ranking" element={logged ? <div className="p-5">Ranking page (TODO)</div> : <Navigate to="/" />} />
                     <Route path="*" element={<NotFoundPage />} />
                 </Route>
