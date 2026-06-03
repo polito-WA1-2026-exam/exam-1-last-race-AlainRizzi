@@ -157,11 +157,13 @@
 
 ## Main React Components
 
-- `ListOfSomething` (in `List.js`): component purpose and main functionality
-- `GreatButton` (in `GreatButton.js`): component purpose and main functionality
-- ...
-
-(only _main_ components, minor ones may be skipped)
+- `App` (in `App.jsx`): root component - holds user/login state, defines all routes, wraps everything in `UserContext.Provider`
+- `NavBar` (in `NavBar.jsx`): top navigation bar - shows Ranking, Play, and a Logout button for logged-in users with username of the user, Login button otherwise
+- `HomePage` (in `HomePage.jsx`): landing page with game instructions - shows Play/Ranking buttons for logged-in users or a Login button for anonymous users
+- `LoginPage` (in `LoginPage.jsx`): login form with username and password fields - calls `onLogin` prop and displays server errors
+- `GamePage` (in `GamePage.jsx`): full game session manager - phases are `setup` (study map), `planning` (90s timer + segment selection), `execution` (step-by-step event reveal), and `result` (final score card)
+- `NetworkMap` (in `NetworkMap.jsx`): SVG metro map rendered from network data - supports hiding lines (`showLines`) and highlighting start/destination stations in green/red
+- `RankingPage` (in `RankingPage.jsx`): leaderboard table showing best score per user with route info - fetches data on mount
 
 ## Screenshot
 

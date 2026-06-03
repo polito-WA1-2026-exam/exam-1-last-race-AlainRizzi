@@ -88,7 +88,7 @@ const isAtLeast3Apart = (network, stationName1, stationName2) => {
     while (queue.length > 0) {
         const { name, distance } = queue.shift();
         if (name === stationName2) return distance >= 3;
-        if (distance >= 3) return true; // target not found within 3 stops
+        if (distance >= 3) return true;
         if (visited.has(name)) continue;
         visited.add(name);
         for (const line of network) {
