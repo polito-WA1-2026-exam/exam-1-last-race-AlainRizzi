@@ -21,6 +21,7 @@ function App() {
     // Currently logged user
     const [user, setUser] = useState({ id: undefined, username: undefined, name: undefined });
     const [logged, setLogged] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     // try to restore the login session
     useEffect(() => {
@@ -32,6 +33,8 @@ function App() {
           }).catch(() => {
                 setUser({ id: undefined, username: undefined, name: undefined });
                 setLogged(false);
+            }).finally(() => {
+                setLoading(false);
             });
     }, []);
 
@@ -50,6 +53,8 @@ function App() {
         setLogged(false);
         navigate('/');
     };
+
+    if (loading) return null;
 
     return (
         <UserContext.Provider value={{ user, logged }}>

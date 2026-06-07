@@ -8,6 +8,10 @@ function LoginPage({ onLogin }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!username || !password) {
+            setError('Please fill in all fields.');
+            return;
+        }
         setError('');
         try {
             await onLogin({ username, password });
@@ -28,7 +32,6 @@ function LoginPage({ onLogin }) {
                             type="text"
                             value={username}
                             onChange={e => setUsername(e.target.value)}
-                            required
                             autoFocus
                         />
                     </Form.Group>
@@ -38,7 +41,6 @@ function LoginPage({ onLogin }) {
                             type="password"
                             value={password}
                             onChange={e => setPassword(e.target.value)}
-                            required
                         />
                     </Form.Group>
                     <Button type="submit" variant="primary" className="w-100">
