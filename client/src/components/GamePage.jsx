@@ -116,32 +116,37 @@ function GamePage() {
                     </Col>
                 </Row>
 
-                <NetworkMap network={network} startStation={game.startStation.name} destinationStation={game.destinationStation.name} showLines={false} />
-
-                <h5 className="mt-4 mb-2">Select segments <span className="text-muted fw-normal fs-6">({route.length} selected)</span></h5>
-                <ListGroup className="mb-4">
-                    {segments.map(seg => {
-                        const selected = !!route.find(s => s.station1 === seg.station1 && s.station2 === seg.station2);
-                        return (
-                            <ListGroup.Item
-                                key={`${seg.station1}-${seg.station2}`}
-                                action
-                                active={selected}
-                                onClick={() => handleToggleSegment(seg)}
-                                className="d-flex justify-content-between align-items-center"
-                            >
-                                <span>{seg.station1} <i className="bi bi-arrow-left-right mx-2" /> {seg.station2}</span>
-                                {selected && <Badge bg="primary" pill>{route.findIndex(s => s.station1 === seg.station1 && s.station2 === seg.station2) + 1}</Badge>}
-                            </ListGroup.Item>
-                        );
-                    })}
-                </ListGroup>
-
-                <div className="text-center">
-                    <Button variant="primary" size="lg" onClick={() => handleSubmit(false)} disabled={route.length === 0}>
-                        <i className="bi bi-send me-2" />Submit route
-                    </Button>
-                </div>
+                <Row>
+                    <Col md={6} className="mb-4 mb-md-0">
+                        <NetworkMap network={network} startStation={game.startStation.name} destinationStation={game.destinationStation.name} showLines={false} />
+                    </Col>
+                    <Col md={6}>
+                        <h5 className="mb-2">Select segments <span className="text-muted fw-normal fs-6">({route.length} selected)</span></h5>
+                        <ListGroup className="mb-3" style={{ maxHeight: '60vh', overflowY: 'auto' }}>
+                            {segments.map(seg => {
+                                const index = route.findIndex(s => s.station1 === seg.station1 && s.station2 === seg.station2);
+                                const selected = index !== -1;
+                                return (
+                                    <ListGroup.Item
+                                        key={`${seg.station1}-${seg.station2}`}
+                                        action
+                                        active={selected}
+                                        onClick={() => handleToggleSegment(seg)}
+                                        className="d-flex justify-content-between align-items-center"
+                                    >
+                                        <span>{seg.station1} <i className="bi bi-arrow-left-right mx-2" /> {seg.station2}</span>
+                                        {selected && <Badge bg="primary" pill>{index + 1}</Badge>}
+                                    </ListGroup.Item>
+                                );
+                            })}
+                        </ListGroup>
+                        <div className="text-center">
+                            <Button variant="primary" size="lg" onClick={() => handleSubmit(false)} disabled={route.length === 0}>
+                                <i className="bi bi-send me-2" />Submit route
+                            </Button>
+                        </div>
+                    </Col>
+                </Row>
             </Container>
         );
     }
