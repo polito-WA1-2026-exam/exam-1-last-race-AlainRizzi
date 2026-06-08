@@ -88,7 +88,7 @@ function GamePage() {
             <Container className="py-4">
                 <h2 className="mb-3">Study the network</h2>
                 <p className="text-muted mb-3">Memorize the lines and stations before your route is assigned.</p>
-                <NetworkMap network={network} />
+                <NetworkMap network={network} startStation={null} destinationStation={null} showLines={true} />
                 <div className="text-center mt-4">
                     <Button variant="primary" size="lg" onClick={handleStart}>
                         <i className="bi bi-play-fill me-2" />Start game
@@ -101,9 +101,14 @@ function GamePage() {
     if (phase === 'planning') {
         const timerVariant = timeLeft > 30 ? 'success' : timeLeft > 10 ? 'warning' : 'danger';
         return (
-            <Container className="py-4">
+            <Container fluid className="py-4 px-5">
                 <Row className="align-items-center mb-3">
-                    <Col>
+                    <Col xs="auto" className="invisible">
+                        <Badge className="fs-5 px-3 py-2">
+                            <i className="bi bi-clock me-2" />{timeLeft}s
+                        </Badge>
+                    </Col>
+                    <Col className="text-center">
                         <h2 className="mb-0">Plan your route</h2>
                         <p className="text-muted mb-0">
                             From <strong className="text-success">{game.startStation.name}</strong> to <strong className="text-danger">{game.destinationStation.name}</strong>
@@ -117,10 +122,24 @@ function GamePage() {
                 </Row>
 
                 <Row>
-                    <Col md={6} className="mb-4 mb-md-0">
+                    <Col md={3} className="mb-4 mb-md-0">
+                        <h5 className="mb-2">Your route <span className="text-muted fw-normal fs-6">({route.length})</span></h5>
+                        {route.length === 0
+                            ? <p className="text-muted">No segments selected yet.</p>
+                            : <ListGroup style={{ maxHeight: '60vh', overflowY: 'auto' }}>
+                                {route.map((seg, i) => (
+                                    <ListGroup.Item key={`${seg.station1}-${seg.station2}`} className="d-flex justify-content-between align-items-center">
+                                        <span>{seg.station1} <i className="bi bi-arrow-left-right mx-2" /> {seg.station2}</span>
+                                        <Badge bg="primary" pill>{i + 1}</Badge>
+                                    </ListGroup.Item>
+                                ))}
+                              </ListGroup>
+                        }
+                    </Col>
+                    <Col md={6} className="mb-4 mb-md-0 d-flex align-items-center justify-content-center">
                         <NetworkMap network={network} startStation={game.startStation.name} destinationStation={game.destinationStation.name} showLines={false} />
                     </Col>
-                    <Col md={6}>
+                    <Col md={3}>
                         <h5 className="mb-2">Select segments <span className="text-muted fw-normal fs-6">({route.length} selected)</span></h5>
                         <ListGroup className="mb-3" style={{ maxHeight: '60vh', overflowY: 'auto' }}>
                             {segments.map(seg => {

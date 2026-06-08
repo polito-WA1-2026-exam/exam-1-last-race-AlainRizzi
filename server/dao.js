@@ -190,7 +190,7 @@ export const completeGame = async (gameId, userId, route) => {
 
     await new Promise((resolve, reject) => {
         const sql = 'UPDATE games SET final_score = ?, route_valid = ?, status = ? WHERE id = ? AND user_id = ?';
-        db.run(sql, [finalScore, valid ? 1 : 0, 'completed', gameId, userId], err => {
+        db.run(sql, [Math.max(finalScore, 0), valid ? 1 : 0, 'completed', gameId, userId], err => {
             if (err) reject(err);
             else resolve();
         });

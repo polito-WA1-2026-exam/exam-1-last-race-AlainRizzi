@@ -1,6 +1,6 @@
 const PADDING = 40;
 
-function NetworkMap({ network, startStation = null, destinationStation = null, showLines = true }) {
+function NetworkMap({ network, startStation, destinationStation, showLines }) {
     if (!network || network.length === 0) return null;
 
     const seen = new Set();
