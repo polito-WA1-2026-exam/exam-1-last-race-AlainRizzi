@@ -184,7 +184,18 @@ function GamePage() {
                     {result.valid ? 'Your route was valid — revealing events step by step.' : 'Your route was invalid — no coins awarded.'}
                 </p>
 
-                <ListGroup className="mb-4">
+                <div className="text-center mb-4">
+                    {!allRevealed
+                        ? <Button variant="primary" onClick={handleRevealNext}>
+                            <i className="bi bi-chevron-right me-2" />Next step
+                          </Button>
+                        : <Button variant="success" onClick={() => setPhase('result')}>
+                            <i className="bi bi-flag-fill me-2" />See result
+                          </Button>
+                    }
+                </div>
+
+                <ListGroup>
                     {revealedSteps.map((step, i) => {
                         const positive = step.event.effect >= 0;
                         return (
@@ -203,17 +214,6 @@ function GamePage() {
                         );
                     })}
                 </ListGroup>
-
-                <div className="text-center">
-                    {!allRevealed
-                        ? <Button variant="primary" onClick={handleRevealNext}>
-                            <i className="bi bi-chevron-right me-2" />Next step
-                          </Button>
-                        : <Button variant="success" onClick={() => setPhase('result')}>
-                            <i className="bi bi-flag-fill me-2" />See result
-                          </Button>
-                    }
-                </div>
             </Container>
         );
     }
