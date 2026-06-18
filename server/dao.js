@@ -68,19 +68,6 @@ export const getNetwork = () => {
     });
 }
 
-// Returns all adjacent station pairs from the DB as { station1, station2 }, deduped (bidirectional connections stored once).
-export const getSegments = () => {
-    return new Promise((resolve, reject) => {
-        const sql = `SELECT ls1.station_name AS station1, ls2.station_name AS station2
-                     FROM line_stations ls1, line_stations ls2
-                     WHERE ls1.line_code = ls2.line_code
-                     AND ls2.position = ls1.position + 1`;
-        db.all(sql, [], (err, rows) => {
-            if (err) reject(err);
-            else resolve(rows.map(r => ({ station1: r.station1, station2: r.station2 })));
-        });
-    });
-};
 
 const isAtLeast3Apart = (network, stationName1, stationName2) => {
     const visited = new Set();

@@ -25,11 +25,6 @@ export async function getNetwork() {
     });
 }
 
-export async function getSegments() {
-    return await fetch(BASE_URL + '/segments', { credentials: 'include' })
-        .then(handleInvalidResponse)
-        .then(r => r.json());
-}
 
 export async function startGame() {
     const data = await fetch(BASE_URL + '/games', {

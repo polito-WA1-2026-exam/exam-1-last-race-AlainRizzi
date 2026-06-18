@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Container, Button, Spinner, Alert, ListGroup, Badge, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router';
-import { getNetwork, getSegments, startGame, submitRoute } from '../api/api.js';
+import { getNetwork, startGame, submitRoute } from '../api/api.js';
 import NetworkMap from './NetworkMap.jsx';
 
 const TIMER_SECONDS = 90;
@@ -20,12 +20,14 @@ function GamePage() {
 
     useEffect(() => {
         setLoading(true);
-        Promise.all([getNetwork(), getSegments()])
-            .then(([net, segs]) => {
+        getNetwork()
+            .then(net => {
                 setNetwork(net);
-                // const shuffled = [...segs].sort(() => Math.random() - 0.5);
-                const alphabetical = [...segs].sort((a, b) => a.station1.localeCompare(b.station1));
-                setSegments(alphabetical);
+                const segs = net.flatMap(line =>
+                    line.Stations.slice(0, -1).map((s, i) => ({ station1: s.name, station2: line.Stations[i + 1].name }))
+                );
+                // setSegments([...segs].sort(() => Math.random() - 0.5));
+                setSegments(segs.sort((a, b) => a.station1.localeCompare(b.station1)));
             })
             .catch(err => setError(err.message))
             .finally(() => setLoading(false));
@@ -173,11 +175,7 @@ function GamePage() {
     if (phase === 'execution') {
         const { result } = game;
         const allRevealed = revealedSteps.length === result.steps.length;
-
-        const handleRevealNext = () => {
-            const next = result.steps[revealedSteps.length];
-            setRevealedSteps(prev => [...prev, next]);
-        };
+        const handleRevealNext = () => setRevealedSteps(prev => [...prev, result.steps[prev.length]]);
 
         return (
             <Container className="py-4">
@@ -246,7 +244,6 @@ function GamePage() {
         );
     }
 
-    return null;
 }
 
 export default GamePage;

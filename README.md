@@ -1,5 +1,5 @@
-# Exam #N: "Exam Title"
-## Student: s123456 LASTNAME FIRSTNAME 
+# Exam #1: "Last Race"
+## Student: s350714 Rizzi Alain 
 
 ## React Client Application Routes
 
@@ -60,18 +60,6 @@
                     "y": 20 
                 }, ...
             ] 
-        }, ...
-    ]
-    ```
-
-- `GET /api/segments` — get all adjacent station pairs for the planning phase [isAuthenticated]
-  - Request body: none
-  - Response body:
-    ```json
-    [
-        { 
-            "station1": "Lotto", 
-            "station2": "Pagano" 
         }, ...
     ]
     ```

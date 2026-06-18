@@ -3,7 +3,7 @@ import express from "express";
 import morgan from 'morgan'; // logging middleware
 import cors from 'cors'; // CORS middleware
 import {check, validationResult} from 'express-validator'; // validation middleware
-import { getNetwork, getSegments, startGame, completeGame, getRanking } from './dao.js';
+import { getNetwork, startGame, completeGame, getRanking } from './dao.js';
 
 // init express
 const app = new express();
@@ -146,20 +146,6 @@ app.get('/api/network', isLoggedIn, async (req, res) => {
 
 /*** Segments API ***/
 
-// GET /api/segments
-// Returns all adjacent station pairs (bidirectional connections) for the planning phase.
-app.get('/api/segments', isLoggedIn, async (req, res) => {
-    try {
-        const segments = await getSegments();
-        if (segments.length === 0)
-            res.status(404).json({error: 'Segments not found'});
-        else
-            res.json(segments);
-    } catch (err) {
-        console.error(err);
-        res.status(500).end();
-    }
-});
 
 /*** Game APIs ***/
 
