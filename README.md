@@ -157,9 +157,23 @@
 - `NetworkMap` (in `NetworkMap.jsx`): SVG metro map rendered from network data - supports hiding lines (`showLines`) and highlighting start/destination stations in green/red
 - `RankingPage` (in `RankingPage.jsx`): leaderboard table showing best score per user with route info - fetches data on mount
 
-## Screenshot
+## Screenshots
 
-![Screenshot](./img/screenshot.jpg)
+The setup phase lets the player study the full metro network before the route is assigned.
+
+![Setup Phase](./img/SetupPhase.png)
+
+During planning the player has 90 seconds to select route segments on the map from the assigned start to destination station.
+
+![Planning Phase](./img/PlanningPhase.png)
+
+The execution phase reveals each segment's random event and coin effect one step at a time.
+
+![Execution Phase](./img/ExecutionPhase.png)
+
+The ranking page shows each user's best valid score alongside their route.
+
+![Ranking Page](./img/RankingPage.png)
 
 ## Users Credentials
 
