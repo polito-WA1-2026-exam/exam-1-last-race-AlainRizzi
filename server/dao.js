@@ -48,7 +48,7 @@ export const getNetwork = () => {
         l.code as lineCode, l.name as lineName, l.color as lineColor,
         ls.position as lineStationPosition FROM stations s, metro_lines l, line_stations ls
         WHERE s.name = ls.station_name AND l.code = ls.line_code
-        ORDER BY l.code, ls.position`; // NOTE: the order by is important to correctly build the network (lines and their stations in the correct order)
+        ORDER BY l.code, ls.position`; // NOTE: the order by is important to correctly build the network (lines and their stations in the correct order) and segments
         db.all(sql, [], (err, rows) => {
             if (err) {
                 reject(err);
