@@ -140,12 +140,10 @@ app.get('/api/network', isLoggedIn, async (req, res) => {
         else
             res.json(network);
     } catch (err) {
+        console.error(err);
         res.status(500).end();
     }
 });
-
-/*** Segments API ***/
-
 
 /*** Game APIs ***/
 

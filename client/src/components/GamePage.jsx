@@ -6,15 +6,13 @@ import PlanningPhase from './PlanningPhase.jsx';
 import ExecutionPhase from './ExecutionPhase.jsx';
 import ResultPhase from './ResultPhase.jsx';
 
-const TIMER_SECONDS = 90;
-
 function GamePage() {
     const [phase, setPhase] = useState('setup');
     const [network, setNetwork] = useState([]);
     const [segments, setSegments] = useState([]);
     const [game, setGame] = useState(null);
     const [route, setRoute] = useState([]);
-    const [timeLeft, setTimeLeft] = useState(TIMER_SECONDS);
+    const [timeLeft, setTimeLeft] = useState(90);
     const [revealedSteps, setRevealedSteps] = useState([]);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
@@ -36,19 +34,16 @@ function GamePage() {
 
     useEffect(() => {
         if (phase !== 'planning') return;
-        setTimeLeft(TIMER_SECONDS);
+        setTimeLeft(90);
         timerRef.current = setInterval(() => {
-            setTimeLeft(t => {
-                if (t <= 1) {
-                    clearInterval(timerRef.current);
-                    handleSubmit();
-                    return 0;
-                }
-                return t - 1;
-            });
+            setTimeLeft(t => t <= 1 ? (clearInterval(timerRef.current), 0) : t - 1);
         }, 1000);
         return () => clearInterval(timerRef.current);
     }, [phase]);
+
+    useEffect(() => {
+        if (phase === 'planning' && timeLeft === 0) handleSubmit();
+    }, [timeLeft]);
 
     const handleStart = async () => {
         setError('');
