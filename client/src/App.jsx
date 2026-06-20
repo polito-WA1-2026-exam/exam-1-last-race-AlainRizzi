@@ -57,7 +57,7 @@ function App() {
     if (loading) return null;
 
     return (
-        <UserContext.Provider value={{ user, logged }}>
+        <UserContext.Provider value={{ user }}>
             <Routes>
                 {/* Routes with navbar */}
                 <Route element={<NavBarLayout onLogout={handleLogout} />}>
