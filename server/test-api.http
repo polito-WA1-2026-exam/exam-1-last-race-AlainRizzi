@@ -24,11 +24,6 @@ GET http://localhost:3001/api/network
 
 ###
 
-# Get all segments (Planning phase)
-GET http://localhost:3001/api/segments
-
-###
-
 # Start a new game
 POST http://localhost:3001/api/games
 Content-Type: application/json

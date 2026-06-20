@@ -184,5 +184,4 @@ The ranking page shows each user's best valid score alongside their route.
 - Giggles, anabella123
 
 ## Use of AI Tools
-Briefly describe whether you used any AI tools (e.g., ChatGPT, GitHub Copilot, Claude) while working on this project, for which purposes (e.g., clarifying concepts, debugging, generating code), and how you verified or adapted their output.
-If you did not use any AI tools, simply state so.
+Used ChatGPT and Claude for discussion about the needed tables and models and they were extremely helpful in turning the image of Milan Metro Lines into x,y coordinates that helped model the map using svg.
