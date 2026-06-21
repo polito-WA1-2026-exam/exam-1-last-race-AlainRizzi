@@ -98,12 +98,14 @@ export const startGame = (userId, network) => {
             startStation = allStations[Math.floor(Math.random() * allStations.length)];
             destinationStation = allStations[Math.floor(Math.random() * allStations.length)];
         } while (startStation.name === destinationStation.name || !isAtLeast3Apart(network, startStation.name, destinationStation.name));
-        const sql = 'INSERT INTO games (user_id, start_station_name, destination_station_name, final_score, route_valid, status) VALUES (?, ?, ?, ?, ?, ?)';
-        db.run(sql, [userId, startStation.name, destinationStation.name, 0, false, 'planning'], function(err) {
+        const startedAt = dayjs().valueOf();
+        const timeLimit = 90;
+        const sql = 'INSERT INTO games (user_id, start_station_name, destination_station_name, final_score, route_valid, status, started_at, time_limit) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+        db.run(sql, [userId, startStation.name, destinationStation.name, 0, false, 'planning', startedAt, timeLimit], function(err) {
             if (err) {
                 reject(err);
             } else {
-                resolve({ id: this.lastID, startStation, destinationStation });
+                resolve({ id: this.lastID, startStation, destinationStation, startedAt, timeLimit });
             }
         });
     });
@@ -112,7 +114,7 @@ export const startGame = (userId, network) => {
 // Returns { start_station_name, destination_station_name } or rejects if not found
 const getGameById = (gameId, userId) => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT start_station_name, destination_station_name FROM games WHERE id = ? AND user_id = ?';
+        const sql = 'SELECT start_station_name, destination_station_name, started_at, time_limit FROM games WHERE id = ? AND user_id = ?';
         db.get(sql, [gameId, userId], (err, row) => {
             if (err) reject(err);
             else if (row === undefined) reject(new Error('Game not found'));

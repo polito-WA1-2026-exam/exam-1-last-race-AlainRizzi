@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import dayjs from 'dayjs';
 import { Container, Spinner, Alert } from 'react-bootstrap';
 import { getNetwork, startGame, submitRoute } from '../api/api.js';
 import SetupPhase from './SetupPhase.jsx';
@@ -13,6 +14,7 @@ function GamePage() {
     const [game, setGame] = useState(null);
     const [route, setRoute] = useState([]);
     const [timeLeft, setTimeLeft] = useState(90);
+    const [timeEnded, setTimeEnded] = useState(false);
     const [revealedSteps, setRevealedSteps] = useState([]);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
@@ -33,17 +35,24 @@ function GamePage() {
     }, []);
 
     useEffect(() => {
-        if (phase !== 'planning') return;
-        setTimeLeft(90);
-        timerRef.current = setInterval(() => {
-            setTimeLeft(t => t <= 1 ? (clearInterval(timerRef.current), 0) : t - 1);
-        }, 1000);
+        if (phase !== 'planning' || !game) return;
+        const tick = () => {
+            const elapsed = Math.floor((dayjs().valueOf() - game.startedAt) / 1000);
+            const remaining = Math.max(0, game.timeLimit - elapsed);
+            setTimeLeft(remaining);
+            if (remaining === 0) {
+                clearInterval(timerRef.current);
+                setTimeEnded(true);
+            }
+        };
+        tick();
+        timerRef.current = setInterval(tick, 1000);
         return () => clearInterval(timerRef.current);
-    }, [phase]);
+    }, [phase, game]);
 
     useEffect(() => {
-        if (phase === 'planning' && timeLeft === 0) handleSubmit();
-    }, [timeLeft]);
+        if (timeEnded && timeLeft==0) handleSubmit();
+    }, [timeEnded]);
 
     const handleStart = async () => {
         setError('');
@@ -52,6 +61,7 @@ function GamePage() {
             setGame(g);
             setRoute([]);
             setRevealedSteps([]);
+            setTimeEnded(false);
             setPhase('planning');
         } catch (err) {
             setError(err.message);

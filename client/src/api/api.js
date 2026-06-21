@@ -36,7 +36,9 @@ export async function startGame() {
     return {
         id: data.id,
         startStation: new Station(data.startStation.name, data.startStation.x, data.startStation.y),
-        destinationStation: new Station(data.destinationStation.name, data.destinationStation.x, data.destinationStation.y)
+        destinationStation: new Station(data.destinationStation.name, data.destinationStation.x, data.destinationStation.y),
+        startedAt: data.startedAt,
+        timeLimit: data.timeLimit
     };
 }
 

@@ -152,8 +152,8 @@ app.get('/api/network', isLoggedIn, async (req, res) => {
 app.post('/api/games', isLoggedIn, async (req, res) => {
     try {
         const network = await getNetwork();
-        const { id, startStation, destinationStation } = await startGame(req.user.id, network);
-        res.json({ id, startStation, destinationStation });
+        const { id, startStation, destinationStation, startedAt, timeLimit } = await startGame(req.user.id, network);
+        res.json({ id, startStation, destinationStation, startedAt, timeLimit });
     } catch (err) {
         console.error(err);
         res.status(500).end();

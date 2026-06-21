@@ -64,7 +64,7 @@
     ]
     ```
 
-- `POST /api/games` — start a new game, server assigns start and destination stations [isAuthenticated]
+- `POST /api/games` — start a new game, server assigns start and destination stations and records the timer [isAuthenticated]
   - Request body: none
   - Response body:
     ```json
@@ -81,7 +81,9 @@
             "name": "Duomo", 
             "x": 50, 
             "y": 60 
-        }
+        },
+        "startedAt": 1718900000000,
+        "timeLimit": 90
     }
     ```
 
@@ -141,7 +143,7 @@
 - Table `stations` - name, x, y
 - Table `line_stations` - line_code, station_name, position
 - Table `events` - id, title, description, effect, probability_weight
-- Table `games` - id, user_id, start_station_name, destination_station_name, final_score, route_valid, status
+- Table `games` - id, user_id, start_station_name, destination_station_name, final_score, route_valid, status, started_at, time_limit
 
 ## Main React Components
 
@@ -151,7 +153,7 @@
 - `LoginPage` (in `LoginPage.jsx`): login form with username and password fields - calls login prop and displays server errors
 - `GamePage` (in `GamePage.jsx`): full game session manager - holds all state, timer logic, and API calls, delegates rendering to the four phase components below
 - `SetupPhase` (in `SetupPhase.jsx`): study the network screen with the full metro map and a Start game button
-- `PlanningPhase` (in `PlanningPhase.jsx`): 90s countdown timer, segment selector, selected route list, and map with start/destination highlighted
+- `PlanningPhase` (in `PlanningPhase.jsx`): countdown timer derived from server-provided startedAt/timeLimit, segment selector, selected route list, and map with start/destination highlighted
 - `ExecutionPhase` (in `ExecutionPhase.jsx`): step by step event reveal with coin deltas, Next step/See result button
 - `ResultPhase` (in `ResultPhase.jsx`): final score card with Play again and Go home actions
 - `NetworkMap` (in `NetworkMap.jsx`): SVG metro map rendered from network data - supports hiding lines (`showLines`) and highlighting start/destination stations in green/red
