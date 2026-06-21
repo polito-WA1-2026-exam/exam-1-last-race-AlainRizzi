@@ -85,7 +85,7 @@
     }
     ```
 
-- `POST /api/games/:id/route` — submit planned route; server validates, applies random events, stores result [isAuthenticated]
+- `POST /api/games/:id/route` — submit planned route, server validates, applies random events, stores result [isAuthenticated]
   - Request body:
     ```json
     { 
@@ -148,11 +148,11 @@
 - `App` (in `App.jsx`): root component - holds user/login state, defines all routes, wraps everything in `UserContext.Provider`
 - `NavBar` (in `NavBar.jsx`): top navigation bar - shows Ranking, Play, and a Logout button for logged-in users with username of the user, Login button otherwise
 - `HomePage` (in `HomePage.jsx`): landing page with game instructions - shows Play/Ranking buttons for logged-in users or a Login button for anonymous users
-- `LoginPage` (in `LoginPage.jsx`): login form with username and password fields - calls `onLogin` prop and displays server errors
-- `GamePage` (in `GamePage.jsx`): full game session manager - holds all state, timer logic, and API calls; delegates rendering to the four phase components below
-- `SetupPhase` (in `SetupPhase.jsx`): study-the-network screen with the full metro map and a Start game button
-- `PlanningPhase` (in `PlanningPhase.jsx`): 90s countdown timer, segment selector, selected-route list, and map with start/destination highlighted
-- `ExecutionPhase` (in `ExecutionPhase.jsx`): step-by-step event reveal with coin deltas, Next step / See result button
+- `LoginPage` (in `LoginPage.jsx`): login form with username and password fields - calls login prop and displays server errors
+- `GamePage` (in `GamePage.jsx`): full game session manager - holds all state, timer logic, and API calls, delegates rendering to the four phase components below
+- `SetupPhase` (in `SetupPhase.jsx`): study the network screen with the full metro map and a Start game button
+- `PlanningPhase` (in `PlanningPhase.jsx`): 90s countdown timer, segment selector, selected route list, and map with start/destination highlighted
+- `ExecutionPhase` (in `ExecutionPhase.jsx`): step by step event reveal with coin deltas, Next step/See result button
 - `ResultPhase` (in `ResultPhase.jsx`): final score card with Play again and Go home actions
 - `NetworkMap` (in `NetworkMap.jsx`): SVG metro map rendered from network data - supports hiding lines (`showLines`) and highlighting start/destination stations in green/red
 - `RankingPage` (in `RankingPage.jsx`): leaderboard table showing best score per user with route info - fetches data on mount
