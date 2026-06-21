@@ -8,10 +8,9 @@ function LoginPage({ onLogin }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!username || !password) {
-            setError('Please fill in all fields.');
-            return;
-        }
+        if (!username && !password) { setError('Username and password are required.'); return; }
+        if (!username) { setError('Username is required.'); return; }
+        if (!password) { setError('Password is required.'); return; }
         setError('');
         try {
             await onLogin({ username, password });
