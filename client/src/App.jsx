@@ -20,7 +20,6 @@ function App() {
 
     // Currently logged user
     const [user, setUser] = useState({ id: undefined, username: undefined, name: undefined });
-    const [logged, setLogged] = useState(false);
     const [loading, setLoading] = useState(true);
 
     // try to restore the login session
@@ -28,11 +27,9 @@ function App() {
         checkSession().then(user => {
             if (user) {
                 setUser({ id: user.id, username: user.username, name: user.name });
-                setLogged(true);
             }
           }).catch(() => {
                 setUser({ id: undefined, username: undefined, name: undefined });
-                setLogged(false);
             }).finally(() => {
                 setLoading(false);
             });
@@ -42,7 +39,6 @@ function App() {
     const handleLogin = async (credentials) => {
         const user = await doLogin(credentials.username, credentials.password);
         setUser({ id: user.id, username: user.username, name: user.name });
-        setLogged(true);
         navigate('/');
     };
 
@@ -50,7 +46,6 @@ function App() {
     const handleLogout = async () => {
         await doLogout();
         setUser({ id: undefined, username: undefined, name: undefined });
-        setLogged(false);
         navigate('/');
     };
 
@@ -63,12 +58,12 @@ function App() {
                 <Route element={<NavBarLayout onLogout={handleLogout} />}>
                     <Route index element={<HomePage />} />
                     <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
-                    <Route path="/ranking" element={logged ? <RankingPage /> : <Navigate to="/" />} />
+                    <Route path="/ranking" element={user?.id ? <RankingPage /> : <Navigate to="/" />} />
                     <Route path="*" element={<NotFoundPage />} />
                 </Route>
 
                 {/* Game route — no navbar */}
-                <Route path="/game" element={logged ? <GamePage /> : <Navigate to="/" />} />
+                <Route path="/game" element={user?.id ? <GamePage /> : <Navigate to="/" />} />
             </Routes>
         </UserContext.Provider>
     );
